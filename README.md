@@ -10,7 +10,7 @@ From the root of your Hugo project:
 
 ```bash
 git init
-git submodule add https://github.com/vnco-logistics/vnco-theme.git themes/vnco-theme
+git submodule add https://github.com/vncologistics/vnco-theme.git themes/vnco-theme
 ```
 
 Then copy the starter configuration and content from `themes/vnco-theme/exampleSite/` into your project root:
@@ -35,7 +35,7 @@ Initialize your site and mount the theme in `hugo.yaml`:
 ```yaml
 module:
   imports:
-    - path: github.com/vnco-logistics/vnco-theme
+    - path: github.com/vncologistics/vnco-theme
 ```
 
 ## 2. How to Configure Sveltia CMS (`static/admin/config.yml`)

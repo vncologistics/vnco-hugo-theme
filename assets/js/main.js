@@ -92,33 +92,52 @@
     });
   }
 
-  // --- Formulario de contacto ---
+  // --- Formulario de contacto (Web3Forms AJAX) ---
   var formPanel = document.querySelector(".form-panel");
   if (formPanel) {
+    var form = formPanel.querySelector("form");
     var sendBtn = formPanel.querySelector(".btn-send");
-    if (sendBtn) {
-      sendBtn.addEventListener("click", function () {
-        var inputs = formPanel.querySelectorAll("input, textarea");
-        var empty = false;
-        inputs.forEach(function (i) {
-          if (!i.value.trim()) empty = true;
-        });
-        if (empty) {
-          var origLabel = sendBtn.getAttribute("data-label-default") || "Send message";
-          sendBtn.textContent = sendBtn.getAttribute("data-label-empty") || "Please fill out all fields";
-          setTimeout(function () {
-            sendBtn.textContent = origLabel;
-          }, 2500);
-          return;
-        }
+    if (form && sendBtn) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
         var origLabel = sendBtn.getAttribute("data-label-default") || "Send message";
-        sendBtn.textContent = sendBtn.getAttribute("data-label-sent") || "Message sent!";
-        setTimeout(function () {
-          sendBtn.textContent = origLabel;
-        }, 2500);
-        inputs.forEach(function (i) {
-          i.value = "";
-        });
+        var formData = new FormData(form);
+  
+        // Safeguard: ensure hidden access_key is never empty
+        if (!formData.get("access_key")) {
+          var keyInput = form.querySelector('input[name="access_key"]');
+          if (keyInput) formData.set("access_key", keyInput.getAttribute("value") || "");
+        }
+  
+        sendBtn.disabled = true;
+  
+        fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" }
+        })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              return { ok: res.ok, data: data };
+            });
+          })
+          .then(function (result) {
+            if (result.ok && result.data.success) {
+              sendBtn.textContent = sendBtn.getAttribute("data-label-sent") || "Message sent!";
+              form.reset();
+            } else {
+              sendBtn.textContent = "Error sending message";
+            }
+          })
+          .catch(function () {
+            sendBtn.textContent = "Error sending message";
+          })
+          .finally(function () {
+            sendBtn.disabled = false;
+            setTimeout(function () {
+              sendBtn.textContent = origLabel;
+            }, 3000);
+          });
       });
     }
   }

@@ -31,47 +31,53 @@
             <p class="panel-sub">{{ . }}</p>
           {{ end }}
 
-          {{/* Render paired rows for half-width fields and full rows for full-width fields */}}
-          {{ $halfFields := slice }}
-          {{ range .fields }}
-            {{ if eq (.width | default "half") "half" }}
-              {{ $halfFields = $halfFields | append . }}
-              {{ if eq (len $halfFields) 2 }}
-                <div class="form-row">
-                  {{ range $halfFields }}
-                    {{ partial "components/form-field.html" . }}
-                  {{ end }}
-                </div>
-                {{ $halfFields = slice }}
-              {{ end }}
-            {{ else }}
-              {{ if gt (len $halfFields) 0 }}
-                <div class="form-row">
-                  {{ range $halfFields }}
-                    {{ partial "components/form-field.html" . }}
-                  {{ end }}
-                </div>
-                {{ $halfFields = slice }}
-              {{ end }}
-              {{ partial "components/form-field.html" . }}
-            {{ end }}
-          {{ end }}
-          {{ if gt (len $halfFields) 0 }}
-            <div class="form-row">
-              {{ range $halfFields }}
+          <form action="{{ .action | default "https://api.web3forms.com/submit" }}" method="POST">
+            <input type="hidden" name="access_key" value="{{ .access_key | default "f948ca8d-0acf-426f-a9ae-b3383d338d78" }}" />
+            <input type="hidden" name="subject" value="{{ .email_subject | default (printf "New contact message from %s" (site.Title | default "VNCO")) }}" />
+            <input type="checkbox" name="botcheck" style="display: none;" tabindex="-1" autocomplete="off" />
+
+            {{/* Render paired rows for half-width fields and full rows for full-width fields */}}
+            {{ $halfFields := slice }}
+            {{ range .fields }}
+              {{ if eq (.width | default "half") "half" }}
+                {{ $halfFields = $halfFields | append . }}
+                {{ if eq (len $halfFields) 2 }}
+                  <div class="form-row">
+                    {{ range $halfFields }}
+                      {{ partial "components/form-field.html" . }}
+                    {{ end }}
+                  </div>
+                  {{ $halfFields = slice }}
+                {{ end }}
+              {{ else }}
+                {{ if gt (len $halfFields) 0 }}
+                  <div class="form-row">
+                    {{ range $halfFields }}
+                      {{ partial "components/form-field.html" . }}
+                    {{ end }}
+                  </div>
+                  {{ $halfFields = slice }}
+                {{ end }}
                 {{ partial "components/form-field.html" . }}
               {{ end }}
-            </div>
-          {{ end }}
+            {{ end }}
+            {{ if gt (len $halfFields) 0 }}
+              <div class="form-row">
+                {{ range $halfFields }}
+                  {{ partial "components/form-field.html" . }}
+                {{ end }}
+              </div>
+            {{ end }}
 
-          {{ partial "components/button.html" (dict
-            "label" (.submit_label | default "Send message")
-            "variant" "btn-primary"
-            "class" "btn-send"
-            "type" "button"
-            "data_empty" (.empty_message | default "Please fill out all fields")
-            "data_sent" (.success_message | default "Message sent!")
-          ) }}
+            {{ partial "components/button.html" (dict
+              "label" (.submit_label | default "Send message")
+              "variant" "btn-primary"
+              "class" "btn-send"
+              "type" "submit"
+              "data_empty" (.empty_message | default "Please fill out all fields")
+              "data_sent" (.success_message | default "Message sent!")
+            ) }}
+          </form>
         </section>
       {{ end }}
 
