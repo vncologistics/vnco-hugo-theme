@@ -1,20 +1,9 @@
-# Site-level configuration (Hugo v0.146.0+ & Sveltia CMS compatible)
+# Theme-level default configuration for vnco-theme (Hugo v0.146.0+)
 baseURL: "https://vncologistics.com/"
 languageCode: "en-us"
 title: "VNCO · Transport & Logistics"
-theme: "vnco-theme"
-
-enableRobotsTXT: true
-buildDrafts: false
-buildFuture: false
-buildExpired: false
-
-minify:
-  disableXML: false
-  minifyOutput: true
 
 params:
-  description: "Reliable freight transport, integrated logistics, and on-time deliveries with a personal touch."
   brand:
     name: "VNCO"
     legal_name: "VNCO L.L.C"
