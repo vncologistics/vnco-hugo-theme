@@ -1,0 +1,31 @@
+{{/*
+  Partial: components/button.html
+  Description: Renders a reusable CTA button or link (`<a>` or `<button>`).
+  Expected Context (dict):
+    - "label" (string, required): Button text.
+    - "url" (string, optional): Destination href. If omitted, renders a <button>.
+    - "variant" (string, optional): CSS variant class (default "btn-primary").
+    - "class" (string, optional): Additional CSS classes (e.g., "btn-send", "btn-lg").
+    - "type" (string, optional): Button type attribute when rendering <button> (default "button").
+    - "id" (string, optional): Optional DOM id attribute.
+    - "data_empty" (string, optional): Validation feedback when fields are empty.
+    - "data_sent" (string, optional): Confirmation message when sent.
+*/}}
+{{ $variant := .variant | default "btn-primary" }}
+{{ $extraClass := .class | default "" }}
+{{ $classes := strings.TrimSpace (printf "btn %s %s" $variant $extraClass) }}
+
+{{ if .url }}
+  <a class="{{ $classes }}" href="{{ .url }}"{{ with .id }} id="{{ . }}"{{ end }}>{{ .label }}</a>
+{{ else }}
+  <button
+    class="{{ $classes }}"
+    type="{{ .type | default "button" }}"
+    {{ with .id }}id="{{ . }}"{{ end }}
+    data-label-default="{{ .label }}"
+    {{ with .data_empty }}data-label-empty="{{ . }}"{{ end }}
+    {{ with .data_sent }}data-label-sent="{{ . }}"{{ end }}
+  >
+    {{ .label }}
+  </button>
+{{ end }}

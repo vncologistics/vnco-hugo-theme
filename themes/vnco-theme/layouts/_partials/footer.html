@@ -1,0 +1,40 @@
+{{/*
+  Partial: footer.html
+  Description: Renders the site footer with brand logo, copyright, footer navigation, contact links, and taglines.
+  Expected Context (.): Current Hugo Page object.
+*/}}
+{{ $settings := site.Data.settings.general }}
+{{ $footerLogo := .Params.footer_logo | default $settings.footer_logo | default site.Params.brand.footer_logo | default "/images/Frame-8@2x.png" }}
+{{ $footerAlt := .Params.footer_logo_alt | default $settings.footer_logo_alt | default site.Params.brand.footer_logo_alt | default "" }}
+{{ $copyright := .Params.copyright | default $settings.copyright | default site.Params.brand.copyright | default "Copyright © VNCO L.L.C" }}
+{{ $email := .Params.contact_email | default $settings.contact.email | default site.Params.contact.email | default "Rick@vncologistics.com" }}
+{{ $phoneDisplay := .Params.contact_phone | default $settings.contact.phone_display | default site.Params.contact.phone_display | default "+1 (239) 203 1761" }}
+{{ $phoneHref := .Params.contact_phone_href | default $settings.contact.phone_href | default site.Params.contact.phone_href | default "+12392031761" }}
+{{ $tagline := .Params.footer_tagline | default $settings.tagline | default site.Params.brand.tagline | default "Transport and logistics, with a personal touch." }}
+{{ $subLabel := .Params.footer_sub | default $settings.sub_label | default site.Params.brand.sub_label | default "VNCO / TRANSPORT AND LOGISTICS" }}
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-brand">
+    <img
+      class="footer-logo"
+      loading="lazy"
+      alt="{{ $footerAlt }}"
+      src="{{ $footerLogo }}"
+    />
+    <div class="footer-copy">{{ $copyright }}</div>
+  </div>
+  <div class="footer-right">
+    {{ partial "nav.html" (dict "page" . "mode" "footer") }}
+    <div class="footer-contact">
+      {{ with $email }}
+        <a href="mailto:{{ . }}">{{ . }}</a>
+      {{ end }}
+      {{ with $phoneDisplay }}
+        <a href="tel:{{ $phoneHref }}">{{ . }}</a>
+      {{ end }}
+    </div>
+    <p class="footer-tag">{{ $tagline }}</p>
+    <p class="footer-sub">{{ $subLabel }}</p>
+  </div>
+</footer>

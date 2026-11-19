@@ -1,0 +1,22 @@
+{{/*
+  Template: layouts/home.html
+  Description: Renders the Home page (`content/_index.md`) by composing modular partials.
+  Follows Hugo v0.146.0+ template conventions.
+*/}}
+{{ define "main" }}
+  {{ with .Params.hero }}
+    {{ partial "components/hero.html" . }}
+  {{ end }}
+
+  {{ with .Params.services }}
+    {{ partial "components/services.html" . }}
+  {{ end }}
+
+  {{ with .Params.about }}
+    {{ partial "components/about.html" . }}
+  {{ end }}
+
+  {{ with .Params.contact_cta }}
+    {{ partial "components/contact-cta.html" . }}
+  {{ end }}
+{{ end }}

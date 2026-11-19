@@ -1,0 +1,33 @@
+{{/*
+  Partial: components/form-field.html
+  Description: Renders an individual contact form input or textarea field configured via front matter.
+  Expected Context (dict):
+    - "name" (string): Field HTML name/id attribute.
+    - "label" (string): Field visible label.
+    - "type" (string): Input type ("text", "email", "tel", "textarea").
+    - "placeholder" (string): Input placeholder text.
+    - "rows" (int, optional): Row count for textarea (default 4).
+    - "required" (bool, optional): Whether field is required (default true).
+*/}}
+{{ $fieldType := .type | default "text" }}
+{{ $fieldName := .name | default (.label | urlize) }}
+<div class="field">
+  <label for="field-{{ $fieldName }}">{{ .label }}</label>
+  {{ if eq $fieldType "textarea" }}
+    <textarea
+      id="field-{{ $fieldName }}"
+      name="{{ $fieldName }}"
+      rows="{{ .rows | default 4 }}"
+      placeholder="{{ .placeholder }}"
+      {{ if .required }}required{{ end }}
+    ></textarea>
+  {{ else }}
+    <input
+      id="field-{{ $fieldName }}"
+      name="{{ $fieldName }}"
+      type="{{ $fieldType }}"
+      placeholder="{{ .placeholder }}"
+      {{ if .required }}required{{ end }}
+    />
+  {{ end }}
+</div>

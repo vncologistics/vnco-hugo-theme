@@ -1,0 +1,10 @@
+{{/*
+  Shortcode: cta-button.html
+  Usage in Markdown:
+    {{< cta-button label="Request a Quote" url="/contacto/" >}}
+*/}}
+{{ partial "components/button.html" (dict
+  "label" (.Get "label" | default "Contact us")
+  "url" (.Get "url" | default "/contacto/")
+  "variant" (.Get "variant" | default "btn-primary")
+) }}

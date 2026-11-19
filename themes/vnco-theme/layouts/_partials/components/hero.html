@@ -1,0 +1,31 @@
+{{/*
+  Partial: components/hero.html
+  Description: Renders the Hero banner section with eyebrow, headline, optional background image, and primary CTA button.
+  Expected Context (dict):
+    - "section_id" (string, optional): Section HTML id (default "inicio").
+    - "eyebrow" (string): Eyebrow label above headline.
+    - "title" (string): Main hero headline (supports newlines via markdownify or safeHTML/replace).
+    - "cta_label" (string): Primary CTA button text.
+    - "cta_url" (string): Primary CTA button destination URL.
+    - "bg_image" (string, optional): Custom hero background image path.
+*/}}
+{{ $id := .section_id | default "inicio" }}
+<section
+  class="hero"
+  id="{{ $id }}"
+  {{ with .bg_image }}
+  style="background-image: linear-gradient(90deg, rgba(9, 18, 66, 0.96) 0%, rgba(9, 18, 66, 0.82) 50%, rgba(9, 18, 66, 0.28) 100%), url('{{ . }}');"
+  {{ end }}
+>
+  <div class="hero-inner">
+    {{ with .eyebrow }}
+      <div class="eyebrow">{{ . }}</div>
+    {{ end }}
+    {{ with .title }}
+      <h1 class="hero-title">{{ replace . "\n" "<br />" | safeHTML }}</h1>
+    {{ end }}
+    {{ if and .cta_label .cta_url }}
+      {{ partial "components/button.html" (dict "label" .cta_label "url" .cta_url "variant" "btn-primary") }}
+    {{ end }}
+  </div>
+</section>

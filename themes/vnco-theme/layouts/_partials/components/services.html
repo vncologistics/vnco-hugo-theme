@@ -1,0 +1,43 @@
+{{/*
+  Partial: components/services.html
+  Description: Renders the Services grid section using components/card.html for each service item.
+  Expected Context (dict):
+    - "section_id" (string, optional): Section HTML id (default "servicios").
+    - "title" (string): Section title.
+    - "intro" (string): Introductory copy above the cards.
+    - "tagline" (string, optional): Secondary tagline line under intro copy.
+    - "items" (slice of maps): List of service cards (each with icon, number, title, description).
+*/}}
+{{ $id := .section_id | default "servicios" }}
+<section class="services" id="{{ $id }}">
+  <div class="services-head reveal">
+    {{ with .title }}
+      <h2 class="section-title">{{ replace . "\n" "<br />" | safeHTML }}</h2>
+    {{ end }}
+    {{ if or .intro .tagline }}
+      <div class="services-copy">
+        {{ with .intro }}
+          <p>{{ . }}</p>
+        {{ end }}
+        {{ with .tagline }}
+          <p class="services-tagline">{{ . }}</p>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+
+  {{ with .items }}
+    <div class="services-grid">
+      {{ range $idx, $item := . }}
+        {{ $num := $item.number | default (printf "%02d" (add $idx 1)) }}
+        {{ partial "components/card.html" (dict
+          "icon" ($item.icon | default "/images/Icon.svg")
+          "icon_alt" ($item.icon_alt | default "")
+          "number" $num
+          "title" $item.title
+          "description" $item.description
+        ) }}
+      {{ end }}
+    </div>
+  {{ end }}
+</section>

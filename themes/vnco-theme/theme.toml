@@ -1,0 +1,13 @@
+name = "VNCO Theme"
+license = "MIT"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "Reusable Hugo v0.146+ theme for VNCO Transport & Logistics with native Sveltia CMS integration and Hugo Pipes asset pipeline."
+homepage = "https://vncologistics.com/"
+demosite = "https://vncologistics.com/"
+tags = ["logistics", "transport", "sveltia-cms", "landing-page", "responsive", "bilingual"]
+features = ["hugo-pipes", "sveltia-cms", "modular-partials", "custom-404", "contact-form"]
+min_version = "0.146.0"
+
+[author]
+  name = "VNCO L.L.C."
+  homepage = "https://vncologistics.com/"

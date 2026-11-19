@@ -1,0 +1,41 @@
+{{/*
+  Template: layouts/page.html
+  Description: Renders standalone pages (`content/contacto.md`, `content/e-n.md`, `content/landing-page.md`, or generic pages).
+  Automatically dispatches to the appropriate modular component set based on `page_type` in front matter.
+*/}}
+{{ define "main" }}
+  {{ $pageType := .Params.page_type | default "contact" }}
+
+  {{ if eq $pageType "landing" }}
+    {{ with .Params.hero }}
+      {{ partial "components/hero.html" . }}
+    {{ end }}
+    {{ with .Params.services }}
+      {{ partial "components/services.html" . }}
+    {{ end }}
+    {{ with .Params.about }}
+      {{ partial "components/about.html" . }}
+    {{ end }}
+    {{ with .Params.contact_cta }}
+      {{ partial "components/contact-cta.html" . }}
+    {{ end }}
+  {{ else if eq $pageType "contact" }}
+    {{ partial "components/contact-section.html" . }}
+  {{ else }}
+    <section class="contact">
+      <div class="contact-top">
+        <div class="eyebrow reveal">{{ .Params.eyebrow | default "VNCO" }}</div>
+        <a class="back-home" href="{{ "/" | relLangURL }}">{{ .Params.back_home_label | default "← Back to home" }}</a>
+      </div>
+      <div class="contact-inner">
+        <h1 class="section-title section-title-light reveal">{{ .Title }}</h1>
+        {{ with .Params.subheading }}
+          <p class="contact-sub reveal">{{ . }}</p>
+        {{ end }}
+        <div class="panel reveal">
+          {{ .Content }}
+        </div>
+      </div>
+    </section>
+  {{ end }}
+{{ end }}

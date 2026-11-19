@@ -1,0 +1,121 @@
+{{/*
+  Partial: components/contact-section.html
+  Description: Renders the full Contact page layout (header eyebrow, back link, dynamic form panel, and contact/office info panel).
+  Expected Context (.): Current Hugo Page object with contact front matter parameters.
+*/}}
+{{ $p := .Params }}
+{{ $settings := site.Data.settings.general }}
+
+<section class="contact" id="{{ $p.section_id | default "contacto" }}">
+  <div class="contact-top">
+    <div class="eyebrow reveal">{{ $p.eyebrow | default "04 / CONTACT US" }}</div>
+    <a class="back-home" href="{{ $p.back_home_url | default "/" }}">
+      {{ $p.back_home_label | default "← Back to home" }}
+    </a>
+  </div>
+
+  <div class="contact-inner">
+    <h1 class="section-title section-title-light reveal">
+      {{ $p.heading | default .Title }}
+    </h1>
+    {{ with $p.subheading }}
+      <p class="contact-sub reveal">{{ . }}</p>
+    {{ end }}
+
+    <div class="contact-grid">
+      <!-- Form Panel -->
+      {{ with $p.form }}
+        <section class="panel form-panel reveal">
+          <h3 class="panel-title">{{ .title | default "Send us a message" }}</h3>
+          {{ with .subtitle }}
+            <p class="panel-sub">{{ . }}</p>
+          {{ end }}
+
+          {{/* Render paired rows for half-width fields and full rows for full-width fields */}}
+          {{ $halfFields := slice }}
+          {{ range .fields }}
+            {{ if eq (.width | default "half") "half" }}
+              {{ $halfFields = $halfFields | append . }}
+              {{ if eq (len $halfFields) 2 }}
+                <div class="form-row">
+                  {{ range $halfFields }}
+                    {{ partial "components/form-field.html" . }}
+                  {{ end }}
+                </div>
+                {{ $halfFields = slice }}
+              {{ end }}
+            {{ else }}
+              {{ if gt (len $halfFields) 0 }}
+                <div class="form-row">
+                  {{ range $halfFields }}
+                    {{ partial "components/form-field.html" . }}
+                  {{ end }}
+                </div>
+                {{ $halfFields = slice }}
+              {{ end }}
+              {{ partial "components/form-field.html" . }}
+            {{ end }}
+          {{ end }}
+          {{ if gt (len $halfFields) 0 }}
+            <div class="form-row">
+              {{ range $halfFields }}
+                {{ partial "components/form-field.html" . }}
+              {{ end }}
+            </div>
+          {{ end }}
+
+          {{ partial "components/button.html" (dict
+            "label" (.submit_label | default "Send message")
+            "variant" "btn-primary"
+            "class" "btn-send"
+            "type" "button"
+            "data_empty" (.empty_message | default "Please fill out all fields")
+            "data_sent" (.success_message | default "Message sent!")
+          ) }}
+        </section>
+      {{ end }}
+
+      <!-- Contact / Office Info Panel -->
+      {{ with $p.contact_info }}
+        <section class="panel contact-panel reveal">
+          <h3 class="panel-title">{{ .title | default "Contact info" }}</h3>
+          {{ with .subtitle }}
+            <p class="panel-sub">{{ . }}</p>
+          {{ end }}
+
+          <div class="contact-lines">
+            {{ range .items }}
+              {{ if .href }}
+                <a class="contact-line" href="{{ .href }}">
+                  <span class="contact-label">{{ .label }}</span>
+                  {{ .value }}
+                </a>
+              {{ else }}
+                <div class="contact-line">
+                  <span class="contact-label">{{ .label }}</span>
+                  <div class="office-address">{{ replace .value "\n" "<br />" | safeHTML }}</div>
+                </div>
+              {{ end }}
+            {{ end }}
+          </div>
+
+          {{ with .office_card }}
+            {{ if .enabled }}
+              <div class="office-map-card">
+                {{ with .image }}
+                  <img loading="lazy" alt="{{ $.Params.contact_info.office_card.title | default "Office location" }}" src="{{ . }}" />
+                {{ end }}
+                {{ with .title }}
+                  <div class="office-map-title">{{ . }}</div>
+                {{ end }}
+                {{ with .caption }}
+                  <p class="office-map-caption">{{ . }}</p>
+                {{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+        </section>
+      {{ end }}
+    </div>
+  </div>
+</section>

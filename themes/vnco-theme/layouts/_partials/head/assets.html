@@ -1,0 +1,10 @@
+{{/*
+  Partial: head/assets.html
+  Description: Loads, minifies, and fingerprints CSS and JS via Hugo Pipes.
+  Expected Context (.): Current Hugo Page object.
+*/}}
+{{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous" />
+
+{{ $js := resources.Get "js/main.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>

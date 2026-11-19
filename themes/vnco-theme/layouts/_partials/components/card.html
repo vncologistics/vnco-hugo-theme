@@ -1,0 +1,26 @@
+{{/*
+  Partial: components/card.html
+  Description: Renders an individual service/feature card with icon, number badge, title, and description.
+  Expected Context (dict):
+    - "icon" (string): Path to icon asset (default "/images/Icon.svg").
+    - "icon_alt" (string, optional): Alt text for icon.
+    - "number" (string): Two-digit card number (e.g., "01").
+    - "title" (string): Service card title.
+    - "description" (string): Service card body text.
+*/}}
+<article class="card reveal">
+  <img
+    class="card-icon"
+    alt="{{ .icon_alt | default "" }}"
+    src="{{ .icon | default "/images/Icon.svg" }}"
+  />
+  {{ with .number }}
+    <span class="card-num">{{ . }}</span>
+  {{ end }}
+  {{ with .title }}
+    <h3 class="card-title">{{ . }}</h3>
+  {{ end }}
+  {{ with .description }}
+    <p class="card-text">{{ . }}</p>
+  {{ end }}
+</article>

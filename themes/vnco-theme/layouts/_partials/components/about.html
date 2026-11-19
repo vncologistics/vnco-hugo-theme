@@ -1,0 +1,45 @@
+{{/*
+  Partial: components/about.html
+  Description: Renders the About Us section with image gallery cards and narrative paragraphs.
+  Expected Context (dict):
+    - "section_id" (string, optional): Section HTML id (default "nosotros").
+    - "eyebrow" (string): Eyebrow text (e.g., "03 / ABOUT US").
+    - "title" (string): Section headline.
+    - "lead_text" (string): Highlighted lead paragraph.
+    - "body_text" (string): Secondary paragraph.
+    - "images" (slice of maps): List of image objects with "src" and "alt".
+*/}}
+{{ $id := .section_id | default "nosotros" }}
+<section class="about" id="{{ $id }}">
+  {{ with .images }}
+    <div class="about-media reveal">
+      <div class="about-cards">
+        {{ range . }}
+          <figure class="about-card">
+            <img
+              loading="lazy"
+              alt="{{ .alt | default "VNCO fleet" }}"
+              src="{{ .src }}"
+            />
+          </figure>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+  <div class="about-body">
+    {{ with .eyebrow }}
+      <div class="eyebrow eyebrow-dark reveal">{{ . }}</div>
+    {{ end }}
+    {{ with .title }}
+      <h2 class="section-title section-title-dark reveal">
+        {{ replace . "\n" "<br />" | safeHTML }}
+      </h2>
+    {{ end }}
+    {{ with .lead_text }}
+      <p class="about-text about-text-lead reveal">{{ . }}</p>
+    {{ end }}
+    {{ with .body_text }}
+      <p class="about-text reveal">{{ . }}</p>
+    {{ end }}
+  </div>
+</section>

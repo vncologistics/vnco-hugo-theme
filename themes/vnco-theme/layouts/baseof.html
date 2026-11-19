@@ -1,0 +1,21 @@
+{{/*
+  Template: layouts/baseof.html
+  Description: Outer HTML shell for all pages in vnco-theme (Hugo v0.146.0+).
+  Expected Context (.): Current Hugo Page object.
+*/}}
+<!doctype html>
+<html lang="{{ with .Params.lang_code }}{{ . }}{{ else }}{{ site.Language.LanguageCode | default "en" }}{{ end }}">
+  <head>
+    {{ partial "head/meta.html" . }}
+    {{ partial "head/assets.html" . }}
+  </head>
+  <body>
+    <div class="page">
+      {{ partial "header.html" . }}
+      <main>
+        {{ block "main" . }}{{ end }}
+      </main>
+      {{ partial "footer.html" . }}
+    </div>
+  </body>
+</html>

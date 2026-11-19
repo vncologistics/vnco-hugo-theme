@@ -1,0 +1,74 @@
+{{/*
+  Partial: nav.html
+  Description: Renders either the desktop navigation bar or the mobile drawer navigation links.
+  Expected Context (dict):
+    - "page" (Page): Current Hugo Page object.
+    - "mode" (string): "desktop", "mobile", or "footer".
+*/}}
+{{ $page := .page }}
+{{ $mode := .mode | default "desktop" }}
+{{ $settings := site.Data.settings.general }}
+
+{{/* Determine menu items: page-level override -> data/settings/general.yaml -> site.Menus.main */}}
+{{ $items := slice }}
+{{ with $page.Params.navigation }}
+  {{ $items = . }}
+{{ else }}
+  {{ with $settings.navigation }}
+    {{ $items = . }}
+  {{ else }}
+    {{ range site.Menus.main }}
+      {{ $items = $items | append (dict "label" .Name "url" .URL "num" (.Params.num | default "")) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if eq $mode "desktop" }}
+  <nav class="nav" aria-label="Main navigation">
+    {{ range $items }}
+      {{ $href := .url }}
+      {{ if and $page.IsHome (hasPrefix $href "/#") }}
+        {{ $href = strings.TrimPrefix "/" $href }}
+      {{ end }}
+      {{ $isActive := or (eq $page.RelPermalink .url) (and (not $page.IsHome) (hasPrefix $page.RelPermalink (strings.TrimSuffix "/" .url))) }}
+      <a class="nav-link{{ if $isActive }} active{{ end }}" href="{{ $href }}">{{ .label }}</a>
+    {{ end }}
+    {{ with $page.Params.lang_switch }}
+      {{ if .enabled }}
+        <a class="nav-lang" href="{{ .target_url }}" aria-label="{{ .aria_label | default "Switch language" }}">{{ .label | default "ES/EN" }}</a>
+      {{ end }}
+    {{ end }}
+  </nav>
+{{ else if eq $mode "mobile" }}
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    {{ range $idx, $item := $items }}
+      {{ $href := $item.url }}
+      {{ if and $page.IsHome (hasPrefix $href "/#") }}
+        {{ $href = strings.TrimPrefix "/" $href }}
+      {{ end }}
+      {{ $num := $item.num | default (printf "%02d" (add $idx 1)) }}
+      <a class="menu-link" href="{{ $href }}">
+        <span>{{ $num }}</span>
+        <b>{{ $item.label }}</b>
+      </a>
+    {{ end }}
+    {{ with $page.Params.lang_switch }}
+      {{ if .enabled }}
+        <a class="menu-link" href="{{ .target_url }}">
+          <span>🌐</span>
+          <b>{{ .label | default "ES/EN" }}</b>
+        </a>
+      {{ end }}
+    {{ end }}
+  </nav>
+{{ else if eq $mode "footer" }}
+  <nav class="footer-nav" aria-label="Footer navigation">
+    {{ range $items }}
+      {{ $href := .url }}
+      {{ if and $page.IsHome (hasPrefix $href "/#") }}
+        {{ $href = strings.TrimPrefix "/" $href }}
+      {{ end }}
+      <a href="{{ $href }}">{{ .label }}</a>
+    {{ end }}
+  </nav>
+{{ end }}

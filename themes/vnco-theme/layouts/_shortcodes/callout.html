@@ -1,0 +1,15 @@
+{{/*
+  Shortcode: callout.html
+  Usage in Markdown:
+    {{< callout title="Logistics Tip" >}}
+    We guarantee safe, on-time freight deliveries across all routes.
+    {{< /callout >}}
+*/}}
+<div class="callout-box">
+  {{ with .Get "title" }}
+    <div class="callout-title">{{ . }}</div>
+  {{ end }}
+  <div class="callout-body">
+    {{ .Inner | markdownify }}
+  </div>
+</div>
